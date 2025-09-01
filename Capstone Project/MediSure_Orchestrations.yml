@@ -1,0 +1,36 @@
+resources:
+  jobs:
+    MediSure_Orchestrations:
+      name: MediSure Orchestrations
+      email_notifications:
+        on_failure:
+          - aimielyntoledo@gmail.com
+      schedule:
+        quartz_cron_expression: 51 42 9 * * ?
+        timezone_id: UTC
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: 01_Bronze_Layer
+          notebook_task:
+            notebook_path: /Workspace/Users/aimielyntoledo@gmail.com/Training-Databricks/Capstone
+              Project/01_Bronze
+            source: WORKSPACE
+          max_retries: 2
+          min_retry_interval_millis: 0
+        - task_key: 02_Silver_Layer
+          depends_on:
+            - task_key: 01_Bronze_Layer
+          notebook_task:
+            notebook_path: /Workspace/Users/aimielyntoledo@gmail.com/Training-Databricks/Capstone
+              Project/02_Silver
+            source: WORKSPACE
+        - task_key: 03_Gold_Layer
+          depends_on:
+            - task_key: 02_Silver_Layer
+          notebook_task:
+            notebook_path: /Workspace/Users/aimielyntoledo@gmail.com/Training-Databricks/Capstone
+              Project/03_Gold
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: STANDARD
